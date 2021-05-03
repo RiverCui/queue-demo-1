@@ -126,10 +126,9 @@ var removeFromList = function removeFromList(list, node) {
         p = x;
         x = x.next;
     }
-    // console.log(p === null || x的上一个节点)
-    // console.log(x === node || x === null)
-    p.next = x.next; //链接p和x.next，即删除x对应的那一项
-
+    //console.log(p === null || p === x的上一个节点)
+    //console.log(x === node || x === null)
+    p.next = x.next;
 
     /*
     if(list === node){
@@ -212,7 +211,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '63690' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57845' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 

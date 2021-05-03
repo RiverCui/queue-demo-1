@@ -103,73 +103,82 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"..\\..\\..\\AppData\\Local\\Yarn\\Data\\global\\node_modules\\parcel\\src\\builtins\\bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
+})({"tree.js":[function(require,module,exports) {
+var createTree = function createTree(value) {
+    return {
+        data: value,
+        children: null,
+        parent: null
+    };
+};
 
-  return bundleURL;
-}
+var addChild = function addChild(node, value) {
+    var newNode = {
+        data: value,
+        children: null,
+        parent: node
+    };
+    node.children = node.children || [];
+    node.children.push(newNode);
+    return newNode;
+};
 
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
-    if (matches) {
-      return getBaseURL(matches[0]);
+var travel = function travel(tree, fn) {
+    fn(tree);
+    if (!tree.children) {
+        return;
     }
-  }
-
-  return '/';
-}
-
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
-
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"..\\..\\..\\AppData\\Local\\Yarn\\Data\\global\\node_modules\\parcel\\src\\builtins\\css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-
-function updateLink(link) {
-  var newLink = link.cloneNode();
-  newLink.onload = function () {
-    link.remove();
-  };
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
+    for (var i = 0; i < tree.children.length; i++) {
+        travel(tree.children[i], fn);
     }
+}; //遍历树
 
-    cssTimeout = null;
-  }, 50);
-}
 
-module.exports = reloadCSS;
-},{"./bundle-url":"..\\..\\..\\AppData\\Local\\Yarn\\Data\\global\\node_modules\\parcel\\src\\builtins\\bundle-url.js"}],"style.css":[function(require,module,exports) {
+var find = function find(tree, node) {
+    if (tree === node) {
+        return tree;
+    } else if (tree.children) {
+        for (var i = 0; i < tree.children.length; i++) {
+            var result = find(tree.children[i], node);
+            if (result) {
+                return result;
+            }
+        }
+        return undefined;
+    } else {
+        return undefined;
+    }
+};
 
-var reloadCSS = require('_css_loader');
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"..\\..\\..\\AppData\\Local\\Yarn\\Data\\global\\node_modules\\parcel\\src\\builtins\\css-loader.js"}],"..\\..\\..\\AppData\\Local\\Yarn\\Data\\global\\node_modules\\parcel\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
+var removeNode = function removeNode(tree, node) {
+    var siblings = node.parent.children;
+    var index = 0;
+    for (var i = 1; i < siblings.length; i++) {
+        if (siblings[i] === node) {
+            index = i;
+        }
+    }
+    siblings.splice(index, 1);
+};
+
+var tree = createTree(10);
+var node2 = addChild(tree, 20);
+var node3 = addChild(tree, 30);
+addChild(tree, 40);
+var node5 = addChild(tree, 50);
+addChild(node2, 201);
+addChild(node2, 202);
+addChild(node2, 203);
+addChild(node2, 204);
+console.log(tree);
+
+var fn = function fn(node) {
+    console.log(node.data);
+};
+
+removeNode(tree, node5);
+console.log(tree);
+},{}],"..\\..\\..\\AppData\\Local\\Yarn\\Data\\global\\node_modules\\parcel\\src\\builtins\\hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -339,4 +348,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["..\\..\\..\\AppData\\Local\\Yarn\\Data\\global\\node_modules\\parcel\\src\\builtins\\hmr-runtime.js"], null)
+},{}]},{},["..\\..\\..\\AppData\\Local\\Yarn\\Data\\global\\node_modules\\parcel\\src\\builtins\\hmr-runtime.js","tree.js"], null)
+//# sourceMappingURL=/tree.403a20bf.map

@@ -13,18 +13,18 @@ const appendList = (list,value) => {
         return node;
 }
 
-const removeFromList = (list,node) => {
+
+const removeFromList = (list, node) => {
     let x = list;
     let p = null;
     while(x !== node){
         p = x;
-        x = x.next;
-    }
-    // console.log(p === null || x的上一个节点)
-    // console.log(x === node || x === null)
-    p.next = x.next //链接p和x.next，即删除x对应的那一项
-    
-
+        x = x.next
+    } 
+    //console.log(p === null || p === x的上一个节点)
+    //console.log(x === node || x === null)
+    p.next = x.next
+  
     /*
     if(list === node){
         //如果删除的是第一个节点
@@ -72,7 +72,7 @@ const list = createList(10);
 const node2 = appendList(list,20);
 const node3 = appendList(list,30);
 const node4 = appendList(list,40);
-removeFromList(list,node3);
+removeFromList(list,node3)
 travelList(list,node => {
     console.log(node.data);
 });
